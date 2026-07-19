@@ -104,3 +104,93 @@ has adequate margin.
 **Note.** The PO voice is a near-square wave, so its harmonics extend well above the
 fundamental — keep the feedback-cap roll-off above ~30 kHz (the values above do) to avoid
 rounding the edges and dulling the tone.
+
+---
+
+## 3. Wrong part fitted at Q1 — entire assembled batch (PCBWay claim)
+
+**Problem.** All assembled boards (PCBWay order **T-Y6W679717A**, 5 sets, 2023-11-06 BOM)
+have a non-functional part at Q1. The BOM line was quoted as generic "MMBT3904"; the part
+placed is marked **"1E"** (large) + **"A3"** (rotated) — not an MMBT3904 marking (onsemi
+MMBT3904 = "1A"/"1AM"). No substitution was noted in the PCBWay quote columns.
+
+**Evidence** (DS1104Z + DMM, two boards tested, identical failure on both):
+
+| Test | Result | A real 3904 would give |
+|------|--------|------------------------|
+| In-circuit: 0.39 mA base drive (4.6 V clock via R1) | base clamps at 0.62–0.68 V ✓ | same |
+| In-circuit: collector (10 kΩ pull-up, needs 0.33 mA) | **never pulls low — stuck at 3.3 V** | saturates to ~0.1 V (forced β ≈ 0.85 vs hFE ≥ 100) |
+| Diode test on legs: 1→2 | 0.68 V | ~0.65 V ✓ |
+| Diode test on legs: 1→3 | 0.67 V | ~0.65 V ✓ |
+| Diode test on legs: 2↔3 | open (2.15 V reading = in-circuit sneak path via U2 ESD diode + R3) | open ✓ |
+
+Junctions present, **zero current gain** → the device behaves as a common-anode dual
+diode (BAW56-class), not a transistor. Diode-mode testing cannot distinguish the two —
+only transistor action (which the circuit itself tests) can.
+
+**Verification.** Replacing Q1 with a genuine onsemi MMBT3904 (marked "1AM") restored
+correct switching immediately (together with fix §5 below). Divider confirmed working:
+5.556 Hz in → 2.747 Hz out (÷2), 0–3.3 V, ~50 % duty.
+
+**Fix.**
+- Rework Q1 on all remaining boards with a genuine MMBT3904.
+- File a claim with PCBWay: wrong component placed vs the quoted BOM line, batch-wide.
+  Evidence: scope captures, diode-test table above, part-marking photos ("1E"/"A3").
+- See §4 to prevent recurrence.
+
+---
+
+## 4. BOM: fully-specified orderable MPN for Q1
+
+**Problem.** The BOM's Q1 MPN was the generic string "MMBT3904", which allowed the
+assembler's supply chain to substitute silently (see §3).
+
+**Fix.** Specify a full orderable part number and manufacturer in the BOM:
+
+| Reference | Was | Change to |
+|-----------|-----|-----------|
+| Q1 | `MMBT3904` (generic) | **`MMBT3904LT1G`** (onsemi) — or `PMBT3904,215` (Nexperia) |
+
+---
+
+## 5. Input-stage hardening (Q1 bias + protection)
+
+**Problem A — input threshold too low (verified on hardware).** The trigger input
+switches at a single V_BE (~0.65 V). The measured Eurorack clock source idles **low at
+~0.68 V** (not 0 V; grounds verified bonded, offset 0.001 V) — above the threshold — so a
+working Q1 never turns off and the collector sticks low. Masked previously by the §3 dud
+part.
+
+**Fix A (proven by bodge on board 1): add a 10 kΩ base–emitter pulldown** (`R15`,
+base → GND, fits across SOT-23 pins 1–2):
+
+| Input | Base voltage (with 10 k pulldown) | Q1 |
+|-------|------------------------------------|----|
+| Low 0.68 V | ÷2 → 0.34 V | off ✓ |
+| High 4.7 V | Thevenin 2.34 V / 5 k → I_B ≈ 0.33 mA | saturated ✓ |
+
+Effective threshold rises from ~0.65 V to ~1.3 V. Bonus: the base no longer floats
+through R1 into an unpatched jack.
+
+**Problem B — no protection for negative inputs.** Bipolar Eurorack signals (±5 V/±8 V
+LFO or audio used as clock) reverse-bias Q1's B–E junction; V_EBO(max) = 6 V, and repeated
+B–E avalanche permanently degrades hFE.
+
+**Fix B: add a 1N4148/BAS316 clamp diode** (`D3`), anode → GND, cathode → Q1 base:
+clamps negative inputs at −0.6 V. R1 (10 k) limits clamp current to safe levels for
+inputs down to at least −12 V.
+
+---
+
+## 6. BOM: wrong MPN for the 100 nF decoupling caps C4–C7
+
+**Problem.** The source BOM lists `C0603C103K4REC7867` for C4/C5/C6/C7 — the **103** code
+is **10 nF**, not the intended 100 nF. PCBWay caught this at assembly (note dated
+2023-11-20: "C4,C5,C6,C7 补料 C0603C104K4REC7867") and substituted the correct part, but
+the error is still latent in the project BOM and will recur on any re-order.
+
+**Fix.**
+
+| Reference | Was (10 nF!) | Change to (100 nF) |
+|-----------|--------------|---------------------|
+| C4, C5, C6, C7 | `C0603C103K4REC7867` | **`C0603C104K4REC7867`** |

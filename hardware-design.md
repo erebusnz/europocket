@@ -121,7 +121,8 @@ Q1 collector
 
 #### Stage 3 — Schmitt trigger
 
-**Device:** `U2` — 74AHC1G14 (single inverting Schmitt trigger, SOT-23-5).
+**Device:** `U2` — 74AHC1G14SE-7 (single inverting Schmitt trigger, **SOT-353/SC-70-5** —
+the `SE` suffix; 0.65 mm pitch, smaller than SOT-23-5).
 
 - Power: VCC = 3.3 V (U2.5), GND (U2.3), 100 nF decoupling.
 - Input: U2.2, from the RC network.
@@ -218,7 +219,7 @@ In (J1.1 / J2.1) → R_in ──┬── (−) op-amp ── out ── R_serie
 | Reference | Value       | Package                     | Notes                              |
 |-----------|-------------|-----------------------------|------------------------------------|
 | U1        | LM1117MP-3.3| SOT-223                     | +12 V → +3.3 V LDO                 |
-| U2        | 74AHC1G14   | SOT-23-5                    | Schmitt inverter                   |
+| U2        | 74AHC1G14SE-7 | SOT-353 (SC-70-5)         | Schmitt inverter                   |
 | U3        | SN74HC74DR  | SOIC-14                     | Dual D flip-flop (÷2)              |
 | U4        | TL072CPS    | SOIC-8W                     | Dual op-amp (Level converter)      |
 | Q1        | MMBT3904    | SOT-23                      | NPN input transistor               |
