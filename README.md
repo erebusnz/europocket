@@ -39,6 +39,8 @@ PO's square-wave edges crisp.
 protection). An LM1117 regulates +3.3 V locally for the logic; the TL072 runs
 directly from ±12 V.
 
+![Schematic](schematic.png)
+
 ## Repository contents
 
 | File | Description |
