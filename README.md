@@ -65,9 +65,6 @@ repurpose one or both output channels to carry the sync click instead of music. 
 modes the level converter's inputs see **silence**, and the module produces no output
 even though every part of it is working correctly.
 
-This is worth knowing before reaching for a multimeter: a PO in the wrong sync mode is
-indistinguishable from a failed op-amp stage. The buffers faithfully amplify silence.
-
 ### Volume — set to full
 
 > Hold **`bpm`** and press **key 16**.
@@ -96,6 +93,56 @@ protection). An LM1117 regulates +3.3 V locally for the logic; the TL072 runs
 directly from ±12 V.
 
 ![Schematic](schematic.png)
+
+## Bill of materials
+
+**Semiconductors**
+
+| Qty | Reference | Part | Package | Purpose |
+|-----|-----------|------|---------|---------|
+| 1 | U1 | LM1117MP-3.3 | SOT-223 | +12 V → +3.3 V LDO |
+| 1 | U2 | 74AHC1G14SE-7 | SOT-353 (SC-70-5) | Schmitt inverter |
+| 1 | U3 | SN74HC74DR | SOIC-14 | Dual D flip-flop (÷2) |
+| 1 | U4 | TL072CPS | SOIC-8W | Dual op-amp (level converter) |
+| 1 | Q1 | MMBT3904LT1G (onsemi) | SOT-23 | NPN input transistor |
+| 2 | D1, D2 | 1N5819WS | SOD-123F | Schottky, reverse-polarity protection |
+| 1 | D3 | BAS316Z | SOD-323 | Q1 base clamp, negative inputs |
+
+**Resistors** — all 0805
+
+| Qty | Reference | Value | Purpose |
+|-----|-----------|-------|---------|
+| 5 | R1, R2, R3, R5, R15 | 10 kΩ | Base series, collector pull-up, RC filter, /CLR1 pull-up, base pulldown |
+| 1 | R4 | 1 kΩ | Sync output series resistor |
+| 2 | R9, R12 | 49.9 kΩ | Buffer input resistors |
+| 2 | R10, R13 | 220 kΩ | Buffer feedback resistors (×4.41) |
+| 2 | R11, R14 | 100 Ω | Buffer output series resistors |
+
+**Capacitors**
+
+| Qty | Reference | Value | Package | Purpose |
+|-----|-----------|-------|---------|---------|
+| 4 | C4, C5, C6, C7 | 100 nF | 0805 | Rail decoupling (+3.3 V ×2, +12 V, −12 V) |
+| 2 | C8, C9 | 18 pF | 0805 | Buffer feedback caps (~40 kHz pole) |
+| 1 | C3 | 1 nF | 0805 | RC filter |
+| 1 | C1 | 22 µF | CP_Elec_5×5.3 | +12 V bulk |
+| 2 | C10, C11 | 10 µF | CP_Elec_5×5.3 | ±12 V decoupling |
+| 1 | C2 | 100 µF | CP_Elec_6.3×5.9 | +3.3 V bulk |
+
+**Connectors and test points**
+
+| Qty | Reference | Part | Purpose |
+|-----|-----------|------|---------|
+| 1 | J1 | IDC header 2×05 | Eurorack ±12 V / GND bus ("Europower") |
+| 1 | H1 | 4-pad row | Audio out L/R + GND |
+| 1 | H2 | 2-pin header 2.54 mm | Clock in + GND |
+| 6 | J2, J4, J6, J7, J9, J10 | Test pad 4.0×2.0 mm | PO In L/R, PO CLK, Reset, B+, GND |
+
+**Assembly consumables**
+
+| Qty | Item | Purpose |
+|-----|------|---------|
+| 3 | 3M 4910F VHB Clear tape, small sections | Bonding the PCB to the Pocket Operator |
 
 ## Repository contents
 

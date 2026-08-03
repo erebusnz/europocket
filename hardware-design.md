@@ -272,36 +272,8 @@ targets, and a disagreement between pad and lead reveals an open joint.
 
 ## Bill of materials
 
-| Reference | Value       | Package                     | Notes                              |
-|-----------|-------------|-----------------------------|------------------------------------|
-| U1        | LM1117MP-3.3| SOT-223                     | +12 V → +3.3 V LDO                 |
-| U2        | 74AHC1G14SE-7 | SOT-353 (SC-70-5)         | Schmitt inverter                   |
-| U3        | SN74HC74DR  | SOIC-14                     | Dual D flip-flop (÷2)              |
-| U4        | TL072CPS    | SOIC-8W                     | Dual op-amp (Level converter)      |
-| Q1        | MMBT3904LT1G (onsemi) | SOT-23            | NPN input transistor — **specify full MPN** |
-| D1, D2    | 1N5819WS    | SOD-123F                    | Schottky, reverse-polarity protect |
-| D3        | BAS316Z     | SOD-323                     | Q1 base clamp, negative inputs     |
-| R1        | 10 kΩ       | 0805                        | Base series resistor               |
-| R2        | 10 kΩ       | 0805                        | Collector pull-up                  |
-| R3        | 10 kΩ       | 0805                        | RC filter                          |
-| R4        | 1 kΩ        | 0805                        | Sync output series resistor        |
-| R5        | 10 kΩ       | 0805                        | /CLR1 pull-up (reset)              |
-| R9, R12   | 49.9 kΩ     | 0805                        | Buffer input resistors             |
-| R10, R13  | 220 kΩ      | 0805                        | Buffer feedback resistors (×4.41)  |
-| R11, R14  | 100 Ω       | 0805                        | Buffer output series resistors     |
-| R15       | 10 kΩ       | 0805                        | Q1 base–emitter pulldown           |
-| C1        | 22 µF       | CP_Elec_5x5.3               | +12 V bulk                         |
-| C2        | 100 µF      | CP_Elec_6.3x5.9             | +3.3 V bulk                        |
-| C3        | 1 nF        | 0805                        | RC filter                          |
-| C4, C5    | 100 nF      | 0805                        | +3.3 V decoupling (U2/U3)          |
-| C6        | 100 nF      | 0805                        | +12 V decoupling                   |
-| C7        | 100 nF      | 0805                        | −12 V decoupling                   |
-| C8, C9    | 18 pF       | 0805                        | Buffer feedback caps (~40 kHz pole)|
-| C10, C11  | 10 µF       | CP_Elec_5x5.3               | ±12 V decoupling                   |
-| J1        | Europower   | IDC 2×05                    | Eurorack ±12 V / GND bus header    |
-| H1        | —           | 4-pad row                   | Audio out L/R + GND                |
-| H2        | —           | 2-pin header 2.54 mm        | Clock in + GND                     |
-| J2, J4, J6, J7, J9, J10 | — | TestPoint 4.0×2.0 mm     | See connector table above          |
+See [README.md](README.md#bill-of-materials) — kept there as the single source of truth
+so the two documents cannot drift apart.
 
 ---
 
